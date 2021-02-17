@@ -41,6 +41,7 @@
 #include "core_interface.h"
 #include "deleter.h"
 #include "exception.h"
+#include "query_condition.h"
 #include "tiledb.h"
 #include "type.h"
 #include "utils.h"
@@ -231,6 +232,19 @@ class Query {
     ctx.handle_error(
         tiledb_query_get_layout(ctx.ptr().get(), query_.get(), &query_layout));
     return query_layout;
+  }
+
+  /**
+   * Sets the read query condition.
+   *
+   * @param condition The query condition object.
+   * @return Reference to this Query
+   */
+  Query& set_condition(const QueryCondition& condition) {
+    auto& ctx = ctx_.get();
+    ctx.handle_error(tiledb_query_set_condition(
+        ctx.ptr().get(), query_.get(), condition.ptr().get()));
+    return *this;
   }
 
   /** Returns the array of the query. */
