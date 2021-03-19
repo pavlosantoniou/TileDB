@@ -3375,6 +3375,7 @@ int32_t tiledb_array_open(
   return TILEDB_OK;
 }
 
+/* This is a deprecated API */
 int32_t tiledb_array_open_at(
     tiledb_ctx_t* ctx,
     tiledb_array_t* array,
@@ -3420,6 +3421,7 @@ int32_t tiledb_array_open_with_key(
   return TILEDB_OK;
 }
 
+/* This is a deprecated API. */
 int32_t tiledb_array_open_at_with_key(
     tiledb_ctx_t* ctx,
     tiledb_array_t* array,
@@ -3484,6 +3486,20 @@ int32_t tiledb_array_get_timestamp(
     return TILEDB_ERR;
 
   *timestamp = array->array_->timestamp();
+
+  return TILEDB_OK;
+}
+
+int32_t tiledb_array_set_config(
+    tiledb_ctx_t* ctx, tiledb_array_t* array, tiledb_config_t* config) {
+  // Sanity check
+  if (sanity_check(ctx) == TILEDB_ERR ||
+      sanity_check(ctx, array) == TILEDB_ERR ||
+      sanity_check(ctx, config) == TILEDB_ERR)
+    return TILEDB_ERR;
+
+  if (SAVE_ERROR_CATCH(ctx, array->array_->set_config(*(config->config_))))
+    return TILEDB_ERR;
 
   return TILEDB_OK;
 }
